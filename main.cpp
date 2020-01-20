@@ -41,7 +41,9 @@ using namespace std;
 
 bool g_terminating = false;
 
-float g_depth = 0;
+float g_depth = -999;
+int g_leakReading = 0;
+double g_timeOfReading = 0;
 
 void PollThread();
 
@@ -142,8 +144,20 @@ void PollThread()
 	while(!g_terminating)
 	{
 		g_depth = GetWaterDepth();
-		usleep(100 * 1000);
+		g_timeOfReading = GetTime();
+		g_leakReading = ReadLeakSensor();
+
+		usleep(250 * 1000);
 	}
+}
+
+int ReadLeakSensor()
+{
+	FILE* fp = popen("python3 /home/azonenberg/read-leak1.py", "r");
+	int adc_code;
+	fscanf(fp, "%d", &adc_code);
+	fclose(fp);
+	return adc_code;
 }
 
 /**
@@ -156,7 +170,7 @@ float GetWaterDepth()
 	const float cal_mm_per_lsb = 1.525;
 
 	float adc_code_avg = 0;
-	int num_avg = 5;
+	int num_avg = 10;
 	for(int avg=0; avg<num_avg; avg ++)
 	{
 		FILE* fp = popen("python3 /home/azonenberg/read-depth.py", "r");
@@ -178,8 +192,8 @@ float GetWaterDepth()
  */
 float DepthToVolume(float depth)
 {
-	//calibration constants hard coded for now
-	const float cal_ml_per_mm = 0.164;
+	//calibration constants hard coded for now (7.4 mm per liter)
+	const float cal_ml_per_mm = 0.135;
 
 	return depth * cal_ml_per_mm;
 }

@@ -39,7 +39,7 @@
 #include "graphwidget/Graph.h"
 
 /**
-	@brief Main application window class for a power supply
+	@brief Main application window class for a sump pump
  */
 class MainWindow	: public Gtk::Window
 {
@@ -55,16 +55,33 @@ protected:
 	//Widgets
 	Gtk::Notebook m_tabs;
 		Gtk::VBox m_summaryTab;
+			Gtk::HBox m_depthBox;
+				Gtk::Label m_depthCaptionLabel;
+				Gtk::Label m_depthLabel;
+			Gtk::HBox m_volumeBox;
+				Gtk::Label m_volumeCaptionLabel;
+				Gtk::Label m_volumeLabel;
+			Gtk::HBox m_flowBox;
+				Gtk::Label m_flowCaptionLabel;
+				Gtk::Label m_flowLabel;
+			Gtk::Button m_silenceAlarmButton;
 		Gtk::VBox m_depthTab;
 			Graph m_depthGraph;
 				Graphable m_depthData;
 		Gtk::VBox m_volumeTab;
+			Graph m_volumeGraph;
+				Graphable m_volumeData;
 		Gtk::VBox m_inflowTab;
+			Graph m_flowGraph;
+				Graphable m_flowData;
 		Gtk::VBox m_dutyTab;
 
 	bool OnTimer(int timer);
 
-protected:
+	bool m_alarming;
+	void AlarmOn();
+	void AlarmOff();
+	void SilenceAlarm();
 };
 
 #endif

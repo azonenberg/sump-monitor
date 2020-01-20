@@ -43,6 +43,10 @@ double GetTime();
 float GetWaterDepth();
 float DepthToVolume(float depth);
 
+int ReadLeakSensor();
+
 extern float g_depth;
+extern int g_leakReading;
+extern double g_timeOfReading;
 
 #endif
