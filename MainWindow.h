@@ -65,6 +65,9 @@ protected:
 				Gtk::Label m_flowCaptionLabel;
 				Gtk::Label m_flowLabel;
 			Gtk::Button m_silenceAlarmButton;
+			Gtk::Frame m_trendFrame;
+				Graph m_trendGraph;
+					Graphable m_trendData;
 		Gtk::VBox m_depthTab;
 			Graph m_depthGraph;
 				Graphable m_depthData;
@@ -82,6 +85,9 @@ protected:
 	void AlarmOn();
 	void AlarmOff();
 	void SilenceAlarm();
+
+	//Flow rate samples since the last time the pump ran
+	std::vector<double> m_flowSamples;
 };
 
 #endif
