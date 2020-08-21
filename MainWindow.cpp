@@ -255,7 +255,8 @@ bool MainWindow::OnTimer(int /*timer*/)
 		//printf("dt = %.3f\n", dt);
 		double dvol = gauss1 - gauss2;		//liters
 		flow = (dvol * 3600) / dt;
-		//printf("rates: %.3f %.3f / %.3f L, %.3f L/hr\n", gauss1, gauss2, dvol, flow);
+
+		printf("rates: %.3f %.3f / %.3f L, %.3f L/hr, dt %f\n", gauss1, gauss2, dvol, flow, dt);
 	}
 
 	//TODO: determine if the pump is on or not
@@ -284,7 +285,7 @@ bool MainWindow::OnTimer(int /*timer*/)
 
 	//Pump is running.
 	//Pump must have just started if we have samples in the buffer.
-	else if(!m_flowSamples.empty())
+	else if(!m_flowSamples.empty() && (flow < -1) )
 	{
 		printf("Pump started\n");
 
@@ -298,7 +299,11 @@ bool MainWindow::OnTimer(int /*timer*/)
 			sum += m_flowSamples[i];
 			count ++;
 		}
-		double avg = sum / count;
+		double avg;
+		if(count == 0)
+			avg = 0;
+		else
+			avg = sum / count;
 		m_flowSamples.clear();
 
 		printf("Average flow during this pump cycle: %f\n", avg);
